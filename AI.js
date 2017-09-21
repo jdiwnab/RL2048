@@ -264,6 +264,8 @@ function resetLocalStore() {
 		localStorage.removeItem("clock")
 		localStorage.removeItem("age")
 		localStorage.removeItem("learning")
+	} catch (e) {
+		
 	}
 }
 function loadOpts() {
