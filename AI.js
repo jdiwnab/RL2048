@@ -252,8 +252,8 @@ function restoreNet() {
 			console.log("restoring brain")
 			agent.loadbrain(localStorage.getItem("brain"));
 		}
-		if(localStorage.getItem("age")) { agent.brain.age = localStorage.getItem("age"); }
-		if(localStorage.getItem("learning")) { agent.brain.learning = localStorage.getItem("learning"); }
+		if(localStorage.getItem("age")) { agent.brain.age = parseInt(localStorage.getItem("age")); }
+		if(localStorage.getItem("learning")) { agent.brain.learning = JSON.parse(localStorage.getItem("learning")); }
 	} catch (e) {
 
 	}
@@ -270,7 +270,7 @@ function resetLocalStore() {
 }
 function loadOpts() {
 	try {
-		if(localStorage.getItem("clock")) { clock = localStorage.getItem("clock"); }
+		if(localStorage.getItem("clock")) { clock = parseInt(localStorage.getItem("clock")); }
 	} catch (e) {
 		
 	}
