@@ -240,7 +240,7 @@ function storeNet() {
 	try {
 		localStorage.setItem("brain", agent.savebrain())
 		localStorage.setItem("clock", clock)
-		localStorage.setItem("age", agent.age)
+		localStorage.setItem("age", agent.brain.age)
 		localStorage.setItem("learning", agent.brain.learning)
 	} catch (e) {
 
@@ -265,7 +265,7 @@ function resetLocalStore() {
 		localStorage.removeItem("age")
 		localStorage.removeItem("learning")
 	} catch (e) {
-		
+
 	}
 }
 function loadOpts() {
