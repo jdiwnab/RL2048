@@ -247,9 +247,9 @@ function storeNet() {
 }
 function restoreNet() {
 	try {
-		if(localStorage.getItem("2048brain")) { 
+		if(localStorage.getItem("brain")) { 
 			console.log("restoring brain")
-			agent.loadbrain(localStorage.getItem("2048brain"));
+			agent.loadbrain(localStorage.getItem("brain"));
 		}
 		if(localStorage.getItem("age")) { agent.age = localStorage.getItem("age"); }
 	} catch (e) {
