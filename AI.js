@@ -241,6 +241,7 @@ function storeNet() {
 		localStorage.setItem("brain", agent.savebrain())
 		localStorage.setItem("clock", clock)
 		localStorage.setItem("age", agent.age)
+		localStorage.setItem("learning", agent.brain.learning)
 	} catch (e) {
 
 	}
@@ -252,6 +253,7 @@ function restoreNet() {
 			agent.loadbrain(localStorage.getItem("brain"));
 		}
 		if(localStorage.getItem("age")) { agent.brain.age = localStorage.getItem("age"); }
+		if(localStorage.getItem("learning")) { agent.brain.learning = localStorage.getItem("learning"); }
 	} catch (e) {
 
 	}
