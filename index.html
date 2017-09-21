@@ -1,0 +1,119 @@
+<html>
+  <head>
+    <script type="text/javascript" src="http://hammerjs.github.io/dist/hammer.min.js"></script>
+    <script type="text/javascript" src="http://cs.stanford.edu/people/karpathy/convnetjs/build/convnet.js"></script>
+    <!--<script type="text/javascript" src="http://cs.stanford.edu/people/karpathy/convnetjs/build/deepqlearn.js"></script>-->
+    <script type="text/javascript" src="scripts/deepqlearn.js"></script>
+    <script type="text/javascript" src="http://cs.stanford.edu/people/karpathy/convnetjs/build/util.js"></script>
+    <script type="text/javascript" src="http://cs.stanford.edu/people/karpathy/convnetjs/build/vis.js"></script>
+    <script type="text/javascript" src="2048.js"></script>
+    <script type="text/javascript" src="AI.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/style.css"></script>
+    <title>Deep Learning 2048</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="heading">
+        <h1 class="title">2048</h1>
+        <div class="scores">
+          <div class="score-container">0</div>
+          <div class="highscore-container">0</div>
+        </div>
+      </div>
+
+      <div class="game-container">
+        <div class="game-message">
+          <p></p>
+          <div class="lower">
+            <a class="retry-button">Try again</a>
+          </div>
+        </div>
+
+        <div class="grid-container">
+          <div class="grid-row">
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+          </div>
+          <div class="grid-row">
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+          </div>
+          <div class="grid-row">
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+          </div>
+          <div class="grid-row">
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+          </div>
+        </div>
+
+        <div class="tile-container">
+
+        </div>
+      </div>
+      <hr>
+      <p>
+      AI based on <a href="http://cs.stanford.edu/people/karpathy/convnetjs/">ConvNetJS</a>.
+      </p>
+    </div>
+    <div class="stats">
+        <!--<canvas id="vis_canvas" width="350" height="150"></canvas>-->
+        <div class="stats">
+          <h3>Reward Graph</h3>
+          <canvas id="graph_canvas"  width="350" height="150"></canvas>
+        </div>
+        <div class="stats">
+          <h3>Loss Graph</h3>
+          <canvas id="loss_canvas"  width="350" height="150"></canvas>
+        </div><br/>
+        <canvas id="net_canvas"  width="900" height="200"></canvas>
+        <div id="brain_stats"></div>
+        <div id="inputs">
+          <button onClick="resetGraph()">Reset Graph</button>
+          <button onClick="toggleTraining()">Toggle Training</button>
+          <button onClick="toggleRunning()">Pause/Unpause</button>
+          <button onClick="toggleSpeed()">Toggle Speed</button>
+          <button onClick="exportNet()">Export Net</button>
+          <button onClick="importNet()">Import Net</button>
+        </div>
+      </div>
+      <div class="stats">
+        <h3>Pretrained Net</h3>
+        <textarea cols="50" rows="25" id="pretrained"></textarea>
+      </div>
+      <div class="stats">
+        <h3>Explaination</h3>
+        <dl>
+          <di>
+            <dt>Reward</dt>
+            <dd>The AI gets a reward based on how well it scored each move, along with if it lost, won, or got a high score. The reward graph is the average over many moves</dd>
+          </di>
+          <di>
+            <dt>Loss</dt>
+            <dd>A measure of how confused the AI is. It compares what it's expected reward for a given move is compared to what it actually got. Even if the reward is low, this should trend lower as the AI learns the rules</dd>
+          </di>
+          <di>
+            <dt>Experience Size</dt>
+            <dd>When learing, it randomly selects a previous state from it's past experience pool, and updates based on that. This avoids issues related to a sequence of moves being too related</dd>
+          </di>
+          <di>
+            <dt>Exploration epsilon</dt>
+            <dd>The chance of the AI making a random move. Early on, it doesn't know how to play, so we want more random moves so it learns. Later, we want it to play better, so less random</dd>
+          </di>
+          <di>
+            <dt>Training</dt>
+            <dd>The AI can run in either Training or non-training modes. Non-training runs faster as it isn't trying to calculate updates, and it also has a very low epsilon, so it plays better, but it doesn't learn anything during this time, so it will not improve.<dd>
+          </di>
+        </dl>
+      </div>
+  </body>
+</html>
