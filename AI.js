@@ -251,7 +251,7 @@ function restoreNet() {
 			console.log("restoring brain")
 			agent.loadbrain(localStorage.getItem("brain"));
 		}
-		if(localStorage.getItem("age")) { agent.age = localStorage.getItem("age"); }
+		if(localStorage.getItem("age")) { agent.brain.age = localStorage.getItem("age"); }
 	} catch (e) {
 
 	}
