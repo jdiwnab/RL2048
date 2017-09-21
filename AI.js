@@ -258,6 +258,14 @@ function restoreNet() {
 
 	}
 }
+function resetLocalStore() {
+	try {
+		localStorage.removeItem("brain")
+		localStorage.removeItem("clock")
+		localStorage.removeItem("age")
+		localStorage.removeItem("learning")
+	}
+}
 function loadOpts() {
 	try {
 		if(localStorage.getItem("clock")) { clock = localStorage.getItem("clock"); }
