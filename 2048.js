@@ -103,8 +103,10 @@ GameManager.prototype.move = function (direction) {
   this.prepareTiles();
 
   // Traverse the grid in the right direction and move tiles
-  traversals.x.forEach(function (x) {
-    traversals.y.forEach(function (y) {
+  for(var xi = 0; xi <= traversals.x.length; xi++) {
+    for (var yi = 0; yi <= traversals.y.length; yi++) {
+      var x = traversals.x[xi];
+      var y = traversals.y[yi];
       cell = { x: x, y: y };
       tile = self.grid.cellContent(cell);
 
@@ -137,8 +139,8 @@ GameManager.prototype.move = function (direction) {
           moved = true; // The tile moved from its original cell!
         }
       }
-    });
-  });
+    }
+  }
 
   if (moved) {
     this.addRandomTile();
@@ -337,13 +339,15 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
   window.requestAnimationFrame(function () {
     self.clearContainer(self.tileContainer);
 
-    grid.cells.forEach(function (column) {
-      column.forEach(function (cell) {
+    for(var i=0; i<grid.cells.length; i++) {
+      var column = grid.cells[i]
+      for(var j=0; j<column.length; j++) {
+        var cell = column[j]
         if (cell) {
           self.addTile(cell);
         }
-      });
-    });
+      }
+    }
 
     self.updateScore(metadata.score);
     self.updateHighScore(metadata.highScore);
@@ -388,9 +392,10 @@ HTMLActuator.prototype.addTile = function (tile) {
     this.applyClasses(element, classes);
 
     // Render the tiles that merged
-    tile.mergedFrom.forEach(function (merged) {
+    for(var i=0; i<tile.mergedFrom.length; i++) {
+      var merged = tile.mergedFrom[i];
       self.addTile(merged);
-    });
+    }
   } else {
     classes.push("tile-new");
     this.applyClasses(element, classes);
@@ -467,9 +472,10 @@ KeyboardInputManager.prototype.on = function (event, callback) {
 KeyboardInputManager.prototype.emit = function (event, data) {
   var callbacks = this.events[event];
   if (callbacks) {
-    callbacks.forEach(function (callback) {
+    for(var i = 0; i<callbacks.length; i++) {
+      var callback = callbacks[i];
       callback(data);
-    });
+    }
   }
 };
 
