@@ -147,7 +147,7 @@ function draw_stats() {
 	brain.visSelf(document.getElementById("brain_stats"));
 }
 function draw_net() {
-    if(timeout == 10 && clock % 10 !== 0) return;  // do this sparingly
+    if(!slow && clock % 10 !== 0) return;  // do this sparingly
 	var canvas = document.getElementById("net_canvas");
 	var ctx = canvas.getContext("2d");
 	var W = canvas.width;
@@ -219,11 +219,7 @@ function toggleRunning() {
 	}
 }
 function toggleSpeed() {
-	if(timeout == 10) {
-		timeout = 250;
-	} else {
-		timeout = 10;
-	}
+	slow = !slow
 }
 function exportNet() {
 	var output = document.getElementById("pretrained");
@@ -276,7 +272,8 @@ function loadOpts() {
 	}
 }
 
-var timeout = 10;
+var slow = false;
+//var timeout = 10;
 var running = true;
 var clock = 0;
 var high_score = 0;
@@ -289,7 +286,11 @@ function runAI() {
 	draw_stats();
 	draw_net();
 	if(running) {
-		setTimeout(runAI, timeout);
+		if(slow) {
+			setTimeout(runAI, 250);
+		} else {
+			requestAnimationFrame(runAI);
+		}
 	}
 }
 document.addEventListener("DOMContentLoaded", function () {
