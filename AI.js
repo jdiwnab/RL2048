@@ -7,9 +7,9 @@ var layer_defs = [];
 layer_defs.push({type:'input', out_sx:1, out_sy:1, out_depth:network_size});
 
 //Normal NN
-layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
-layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
-layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
+layer_defs.push({type:'fc', num_neurons: 100, activation:'relu'});
+layer_defs.push({type:'fc', num_neurons: 100, activation:'relu'});
+layer_defs.push({type:'fc', num_neurons: 100, activation:'relu'});
 
 //ConvNet
 //8 3x3 filters
@@ -24,11 +24,11 @@ var tdtrainer_options = {learning_rate:0.005, momentum:0.2, batch_size:64, l2_de
 
 var opt = {};
 opt.temporal_window = temporal_window;
-opt.experience_size = 30000;
-opt.start_learn_threshold = 1000;
+opt.experience_size = 60000;
+opt.start_learn_threshold = 2000;
 opt.gamma = 0.5
 opt.learning_steps_total = 100000;
-opt.learning_steps_burnin = 1000;
+opt.learning_steps_burnin = 2000;
 opt.epsilon_max = 0.75;
 opt.epsilon_min = 0.01;
 opt.epsilon_test_time =0.001;
@@ -284,7 +284,7 @@ function runAI() {
 		storeNet();
 	}
 	draw_stats();
-	draw_net();
+	//draw_net();
 	if(running) {
 		if(slow) {
 			setTimeout(runAI, 250);
