@@ -7,9 +7,10 @@ var layer_defs = [];
 layer_defs.push({type:'input', out_sx:1, out_sy:1, out_depth:network_size});
 
 //Normal NN
-layer_defs.push({type:'fc', num_neurons: 100, activation:'relu'});
-layer_defs.push({type:'fc', num_neurons: 100, activation:'relu'});
-layer_defs.push({type:'fc', num_neurons: 100, activation:'relu'});
+layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
+layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
+layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
+layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
 
 //ConvNet
 //8 3x3 filters
