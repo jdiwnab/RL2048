@@ -61,9 +61,8 @@
         </div>
       </div>
       <hr>
-      <p>
-      AI based on <a href="http://cs.stanford.edu/people/karpathy/convnetjs/">ConvNetJS</a>.
-      </p>
+      <p>AI based on <a href="http://cs.stanford.edu/people/karpathy/convnetjs/">ConvNetJS</a>.</p>
+      <p>Please play for a while. After 1000 turns, the AI will take over</p>
     </div>
     <div class="stats">
         <div class="stats">
@@ -73,9 +72,14 @@
         <div class="stats">
           <h3>Loss Graph</h3>
           <canvas id="loss_canvas"  width="350" height="150"></canvas>
+        </div>
+        <div class="stats">
+          <h3>Scores</h3>
+          <canvas id="score_canvas"  width="350" height="150"></canvas>
         </div><br/>
         <!--<canvas id="net_canvas"  width="900" height="200"></canvas>-->
         <div id="brain_stats"></div>
+        <div id="avg_score"></div>
         <div id="inputs">
           <button onClick="resetGraph()">Reset Graph</button>
           <button onClick="toggleTraining()">Toggle Training</button>
