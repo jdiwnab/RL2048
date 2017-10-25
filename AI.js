@@ -10,7 +10,6 @@ layer_defs.push({type:'input', out_sx:1, out_sy:1, out_depth:network_size});
 layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
 layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
 layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
-layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
 
 //ConvNet
 //8 3x3 filters
@@ -26,11 +25,11 @@ var tdtrainer_options = {learning_rate:0.005, momentum:0.2, batch_size:64, l2_de
 var opt = {};
 opt.temporal_window = temporal_window;
 opt.experience_size = 60000;
-opt.start_learn_threshold = 2000;
-opt.gamma = 0.5
+opt.start_learn_threshold = 1000;
+opt.gamma = 0.75
 opt.learning_steps_total = 100000;
-opt.learning_steps_burnin = 2000;
-opt.epsilon_max = 0.75;
+opt.learning_steps_burnin = 1000;
+opt.epsilon_max = 1.00;
 opt.epsilon_min = 0.01;
 opt.epsilon_test_time =0.001;
 opt.layer_defs = layer_defs;
@@ -41,6 +40,7 @@ var brain = new deepqlearn.Brain(num_inputs, num_actions, opt);
 var Agent = function() {
 	this.brain = brain;
 	this.reward_bonus = 0.0;
+	this.observing = false
 }
 function rescale(x) {
 	if(x==0) return 0;
@@ -56,7 +56,7 @@ function invert(x) {
 	return 1+ (-1/x);
 }
 Agent.prototype = {
-	forward: function() {
+	buildInput: function() {
 		var input_array = new Array(num_inputs);
 		input_array.fill(0);
 		manager.grid.eachCell(function(x, y, tile) {
@@ -67,6 +67,10 @@ Agent.prototype = {
 				}
 			}
 		});
+		return input_array;
+	},
+	forward: function() {
+		var input_array = this.buildInput();
 		var action = this.brain.forward(input_array);
 		this.input = input_array.toString();
 		this.action = action;
@@ -87,6 +91,7 @@ Agent.prototype = {
 		//});
 		if(manager.over || manager.won) {
 			terminal = true;
+			draw_scores(manager.score);
 			if(manager.score > high_score) {
 				high_score = manager.score;
 				reward = reward + 100;
@@ -112,14 +117,35 @@ Agent.prototype = {
 		//reward = reward - 0.25;
 		this.brain.backward(reward, terminal);
 	},
-
 	tick: function() {
 		this.old_score = manager.score;
 		this.forward();
 		manager.inputManager.emit("move", this.action);
 		this.new_score = manager.score;
 		this.backwards();
+	},
 
+	addObserver: function() {
+		if(this.observing === true) return; 
+		var self = this
+		manager.inputManager.on("move", function(direction) {
+			if(observing) {
+				self.action = direction
+				self.new_score = manager.score;
+				self.brain.observation(self.input_array, self.action);
+				self.backwards();
+				brain.visSelf(document.getElementById("brain_stats"));
+				requestAnimationFrame(runAI);
+			}
+		});
+		this.observing = true;
+	},
+
+	readyObservation: function(direction) {
+		this.addObserver();
+		this.old_score = manager.score;
+		this.input_array = this.buildInput()
+		this.input = this.input_array.toString();
 	},
 
 	savebrain: function() {
@@ -136,6 +162,7 @@ Agent.prototype = {
 }
 var reward_graph = new cnnvis.Graph();
 var loss_graph = new cnnvis.Graph();
+var score_graph = new cnnvis.Graph();
 function draw_stats() { 
 	if(clock % 20 === 0) {
 		reward_graph.add(clock/20, brain.average_reward_window.get_average());
@@ -144,8 +171,18 @@ function draw_stats() {
 		reward_graph.drawSelf(gcanvas);
 		var lcanvas = document.getElementById("loss_canvas");
 		loss_graph.drawSelf(lcanvas);
+		var avg = 0;
+		score_graph.pts.forEach(function(x) { avg += x.y/score_graph.pts.length; });
+		document.getElementById("avg_score").textContent = "average score: "+avg;
 	}
 	brain.visSelf(document.getElementById("brain_stats"));
+
+}
+function draw_scores(score) {
+	games++;
+	score_graph.add(games, score);
+	var scanvas = document.getElementById("score_canvas");
+	score_graph.drawSelf(scanvas);
 }
 function draw_net() {
     if(!slow && clock % 10 !== 0) return;  // do this sparingly
@@ -207,8 +244,10 @@ function max_min_element(array) {
 }
 function resetGraph() {
 	clock = 0;
+	games = 0;
 	reward_graph = new cnnvis.Graph();
 	loss_graph = new cnnvis.Graph();
+	score_graph = new cnnvis.Graph();
 }
 function toggleTraining() {
 	agent.brain.learning = !agent.brain.learning
@@ -275,12 +314,24 @@ function loadOpts() {
 
 var slow = false;
 //var timeout = 10;
-var running = true;
+var running = false;
 var clock = 0;
+var games = 0;
 var high_score = 0;
+var observing = true;
+var observing_steps = 0;
 function runAI() {
 	clock++;
-	agent.tick();
+	if(clock < observing_steps) {
+		observing = true;
+		agent.readyObservation();
+	} else {
+		if(observing) {
+			observing = false;
+			running = true;
+		}
+		agent.tick();
+	}
 	if(clock % 1000 === 0) {
 		storeNet();
 	}
